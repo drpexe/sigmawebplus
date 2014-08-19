@@ -8,6 +8,11 @@
 
 ############## ACTIVITIES ###################
 <Activity_Login@BoxLayout>
+	#Properties
+	student_name: 'Fulano de Tal'
+	student_username: '123456789'
+	student_photo: 'res/android/ic_contact_picture.png'
+
 	#Hack: Dropdown weakref
 	#Mais info. na definicao do widget KivyDropDown
 	dropdown_safe_id: dropdown.__self__
@@ -43,6 +48,46 @@
 						height: action_button.height 
 				
 		BoxLayout:
+			orientation: 'vertical'
+			
+			#Header com a foto e o nome do aluno
+			BoxLayout:
+				padding: (20,10)
+				size_hint: (1, 0.25)
+				
+				Image:
+					size_hint: (None, 1)
+					width: self.height
+					allow_stretch: True
+					source: root.student_photo
+				
+				BoxLayout:
+					padding: (10, 0)
+					orientation: 'vertical'
+					
+					Label:
+						size_hint: (1, 0.6)
+						color: DarkGray
+						markup: True
+						halign: 'center'
+						valign: 'middle'
+						text: '[b]' + root.student_name + '[/b]'
+						font_size: self.height / 3
+						text_size: self.size
+						
+					
+					Label:
+						size_hint: (1, 0.4)
+						color: DarkGray
+						markup: True
+						halign: 'center'
+						valign: 'middle'
+						text: root.student_username
+						font_size: self.height / 2
+						text_size: self.size
+			
+			BoxLayout:
+				
 
 
 ############## DEFINITIONS ###################
