@@ -1,0 +1,134 @@
+#:set VeryDarkGreen (10/5/255.0,45/5/255.0,35/5/255.0,1)
+#:set DarkGreen (10/255.0,45/255.0,35/255.0,1)
+#:set LightGreen (25/255.0,117/255.0,93/255.0,1)
+#:set DarkGray (0.18,0.18,0.18,1)
+#:set LightGray (0.86,0.86,0.86,1)
+#:set White (1,1,1,1)
+#:set Black (0,0,0,1)
+
+############## ACTIVITIES ###################
+<Activity_Login@BoxLayout>
+	KivyFragment:
+		__safe_id: [dropdown.__self__]
+		
+		orientation: 'vertical'
+		
+		KivyActionBar:
+			icon: 'res/logo-white.png'
+			title: ' SigmaWeb+'
+			
+			AnchorLayout:
+				id: action_button
+				anchor_x: 'right'
+				
+				KivyActionBarButton:
+					icon: 'res/android/ic_menu_moreoverflow_normal_holo_dark.png'					
+					on_release: 
+						dropdown.open(action_button)
+					
+		KivyDropDown:
+			id: dropdown
+			
+			KivyDropDownItem:
+				text: 'Desconectar'
+				on_release:
+					dropdown.select('Desconectar') 
+				
+		BoxLayout:
+
+
+############## DEFINITIONS ###################
+
+<KivyDropDown@DropDown>
+	on_parent: self.dismiss()
+	
+<KivyDropDownItem@Button>
+	#background_color: Black
+	size_hint_y: None
+	font_size: self.height / 2
+
+<KivyFragment@BoxLayout>
+	canvas.before:
+		Color:
+			rgb: LightGray
+		Rectangle:
+			pos: self.pos
+			size: self.size
+
+<KivyActionBarButton@Button>
+	#Property
+	icon: ''
+	background_color: DarkGreen
+	
+	#Style
+	size_hint: None,1
+	width: self.height
+	
+	#Function
+	overlay: 0
+	
+	on_press:
+		root.overlay = 0.6
+		#if self.btn_active == 1: app.on_event(self.eventname)
+	
+	on_release: 
+		root.overlay = 0
+	
+	canvas.after:
+		Color:
+			rgb: root.background_color
+		Rectangle:
+			pos: self.pos
+			size: self.size
+		Color:
+			rgb: White
+		Rectangle:
+			source: root.icon
+			pos: (self.center_x-self.height/2, self.center_y-self.height/2)
+			size: (self.height, self.height)
+		Color:
+			rgba: 0,0,0,root.overlay
+		Rectangle:
+			pos: self.pos
+			size: self.size
+	
+	
+
+<KivyActionBar@BoxLayout>
+	#Property
+	icon: ''
+	title: ''
+
+	#Style
+	size_hint: 1, 0.10
+	
+	canvas.before:
+		Color:
+			rgb: DarkGreen
+		Rectangle:
+			pos: self.pos
+			size: self.size
+	
+	canvas.after:
+		Color:
+			rgb: VeryDarkGreen
+		Line:
+			points: (0, self.center_y-self.height/2, self.width,self.center_y-self.height/2)
+	
+	AnchorLayout:
+		anchor_x: 'left'
+		
+		BoxLayout:
+			Image:
+				source: root.icon
+				size_hint: None,0.9
+				width: self.height + 10
+				pos_hint: {'x': 0, 'y': 0.05}
+		
+			Label:
+				size_hint: (None, 1)
+				halign: 'left'
+				width: self.texture_size[0]
+				markup: True
+				font_size: self.height/2*0.9
+				text: root.title
