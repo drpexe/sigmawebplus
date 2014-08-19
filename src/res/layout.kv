@@ -84,8 +84,8 @@
 			rgb: White
 		Rectangle:
 			source: root.icon
-			pos: (self.center_x-self.height/2, self.center_y-self.height/2)
-			size: (self.height, self.height)
+			pos: (self.center_x-self.height*0.7/2, self.center_y-self.height*0.7/2)
+			size: (self.height*0.7, self.height*0.7)
 		Color:
 			rgba: 0,0,0,root.overlay
 		Rectangle:
@@ -121,14 +121,14 @@
 		BoxLayout:
 			Image:
 				source: root.icon
-				size_hint: None,0.9
-				width: self.height + 10
-				pos_hint: {'x': 0, 'y': 0.05}
+				size_hint: None,0.7
+				width: self.height + 20
+				pos_hint: {'x': 0, 'y': 0.15}
 		
 			Label:
 				size_hint: (None, 1)
 				halign: 'left'
 				width: self.texture_size[0]
 				markup: True
-				font_size: self.height/2*0.9
+				font_size: self.height/2*0.7
 				text: root.title
