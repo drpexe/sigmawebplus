@@ -8,9 +8,12 @@
 
 ############## ACTIVITIES ###################
 <Activity_Login@BoxLayout>
-	KivyFragment:
-		__safe_id: [dropdown.__self__]
-		
+	#Hack: Dropdown weakref
+	#Mais info. na definicao do widget KivyDropDown
+	dropdown_safe_id: dropdown.__self__
+	on_parent: dropdown.dismiss()
+
+	KivyActivity:		
 		orientation: 'vertical'
 		
 		KivyActionBar:
@@ -26,13 +29,16 @@
 					on_release: 
 						dropdown.open(action_button)
 					
-		KivyDropDown:
-			id: dropdown
-			
-			KivyDropDownItem:
-				text: 'Desconectar'
-				on_release:
-					dropdown.select('Desconectar') 
+				KivyDropDown:
+					id: dropdown
+					
+					KivyDropDownItem:
+						text: 'Sobre'
+						on_release: dropdown.select(self.text)
+					
+					KivyDropDownItem:
+						text: 'Desconectar'
+						on_release: dropdown.select(self.text) 
 				
 		BoxLayout:
 
@@ -40,14 +46,17 @@
 ############## DEFINITIONS ###################
 
 <KivyDropDown@DropDown>
-	on_parent: self.dismiss()
+	#Hack: Dropdown weakref
+	#Eu comentei essa linha e movi o dropdown.dismiss() para o widget principal por causa de problemas com weakref
+	#Se eu dou um dismiss no widget assim que ele é adicionado ao layout. O garbage collector deleta ele
+	#on_parent: self.dismiss()
 	
 <KivyDropDownItem@Button>
 	#background_color: Black
 	size_hint_y: None
 	font_size: self.height / 2
 
-<KivyFragment@BoxLayout>
+<KivyActivity@BoxLayout>
 	canvas.before:
 		Color:
 			rgb: LightGray
