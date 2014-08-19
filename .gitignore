@@ -1,3 +1,10 @@
+# Project specific
+venv/
+python-for-android/
+release/
+*~
+kivy.ini
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
