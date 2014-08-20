@@ -29,81 +29,80 @@ APK_KEYSTORE := ~/Dropbox/Pessoal/Backup/Android-Keys/org-drpexe-sigmawebplus-re
 APK_ALIAS := sigmawebplus
 APK_PERMISSIONS = --permission INTERNET
 
-# Run
+
 .PHONY: run
 run:
 	cd $(PROJECT_DIR); \
 	$(PY) main.py
 
-.PHONY: inspect
-inspect:
-	cd $(PROJECT_DIR); \
-	$(PY) main.py -m inspector
+.PHONY: build
+build:
+	source android-sdk.sh; \
+	cd $(PYTHON_FOR_ANDROID_PACKAGE); \
+	$(PY) ./build.py --package $(APK_PACKAGE) --name $(APP_NAME) --version $(APK_VERSION) --orientation $(APK_ORIENTATION) --icon $(APK_ICON) --presplash $(APK_PRESPLASH) --dir $(PROJECT_DIR) $(APK_PERMISSIONS) --window debug installd
+
+.PHONY: build-release
+build-release:
+	source android-sdk.sh; \
+	cd $(PYTHON_FOR_ANDROID_PACKAGE); \
+	$(PY) ./build.py --package $(APK_PACKAGE) --name $(APP_NAME) --version $(APK_VERSION) --orientation $(APK_ORIENTATION) --icon $(APK_ICON) --presplash $(APK_PRESPLASH) --dir $(PROJECT_DIR) $(APK_PERMISSIONS) --window release
+	make release-sign
+
+.PHONY: release-sign
+release-sign:
+	rm -f $(APK_FINAL)
+	jarsigner -verbose -sigalg MD5withRSA -digestalg SHA1 -keystore $(APK_KEYSTORE) $(APK_RELEASE) $(APK_ALIAS)
+	source android-sdk.sh; \
+	zipalign -v 4 $(APK_RELEASE) $(APK_FINAL)
 
 .PHONY: distclean
 distclean:
 	sudo rm $(VENV) -r -f
 	sudo rm python-for-android -r -f
 
-.PHONY: android
-android:
-	source android-sdk.sh; \
-	cd $(PYTHON_FOR_ANDROID_PACKAGE); \
-	$(PY) ./build.py --package $(APK_PACKAGE) --name $(APP_NAME) --version $(APK_VERSION) --orientation $(APK_ORIENTATION) --icon $(APK_ICON) --presplash $(APK_PRESPLASH) --dir $(PROJECT_DIR) $(APK_PERMISSIONS) --window debug installd
+.PHONY: install-deps
+install-deps: distclean install-venv install-pipmodules install-py4a
+	sudo apt-get install ia32-libs libc6-dev-i386 -y
+
+.PHONY: install-deps-x86
+install-deps-x86: distclean install-venv install-pipmodules install-py4a
+
+.PHONY: install
+install: build-py4a
 
 .PHONY: logcat
 logcat:
 	source android-sdk.sh; \
 	adb logcat python:I *:S
 
-.PHONY: logcat_all
-logcat_all:
+.PHONY: logcat-all
+logcat-all:
 	source android-sdk.sh; \
 	adb logcat *:I
 
-.PHONY: android_release
-android_release:
-	source android-sdk.sh; \
-	cd $(PYTHON_FOR_ANDROID_PACKAGE); \
-	$(PY) ./build.py --package $(APK_PACKAGE) --name $(APP_NAME) --version $(APK_VERSION) --orientation $(APK_ORIENTATION) --icon $(APK_ICON) --presplash $(APK_PRESPLASH) --dir $(PROJECT_DIR) $(APK_PERMISSIONS) --window release
-	make android_release_sign
+# Setup Internal
 
-.PHONY: android_release_sign
-android_release_sign:
-	rm -f $(APK_FINAL)
-	jarsigner -verbose -sigalg MD5withRSA -digestalg SHA1 -keystore $(APK_KEYSTORE) $(APK_RELEASE) $(APK_ALIAS)
-	source android-sdk.sh; \
-	zipalign -v 4 $(APK_RELEASE) $(APK_FINAL)
-
-# Setup
-
-.PHONY: install_venv
-install_venv:
+.PHONY: install-venv
+install-venv:
 	sudo apt-get install python-pip -y
 	sudo pip install virtualenv
 	virtualenv -p python2.7 --system-site-packages $(VENV)
 
-.PHONY: install_pipmodules
-install_pipmodules:
-	sudo apt-get install python-notify2 -y
+.PHONY: install-pipmodules
+install-pipmodules:
 	sudo apt-get install python-setuptools python-pygame python-opengl python-gst0.10 python-enchant gstreamer0.10-plugins-good libgl1-mesa-dev-lts-quantal libgles2-mesa-dev-lts-quantal -y
 	sudo apt-get install build-essential patch git-core ccache ant python-pip python-dev -y
-	#sudo apt-get install ia32-libs libc6-dev-i386 -y
 	$(PIP) install cython
-	$(PIP) install kivy
-	$(PIP) install pycrypto
+	$(PIP) install kivy #This is only necessary to run on Desktop
 
-.PHONY: install_pythonforandroid
-install_pythonforandroid:
+.PHONY: install-py4a
+install-py4a:
 	git clone https://github.com/drpexe/sigmawebplus-py4a.git python-for-android
 	sudo chmod +x android-sdk.sh
 
-.PHONY: createdist
-createdist:
+.PHONY: build-py4a
+build-py4a:
 	source android-sdk.sh; \
 	source "$(VENV)/bin/activate"; \
 	cd $(PYTHON_FOR_ANDROID); \
 	./distribute.sh -m $(PY4A_MODULES)
-
-.PHONY: install
-install: distclean install_venv install_pipmodules install_pythonforandroid createdist
