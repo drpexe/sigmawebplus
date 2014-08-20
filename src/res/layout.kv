@@ -35,10 +35,12 @@
 					KivyDropDownItem:
 						text: 'Sobre'
 						on_release: dropdown.select(self.text)
+						height: action_button.height
 					
 					KivyDropDownItem:
 						text: 'Desconectar'
-						on_release: dropdown.select(self.text) 
+						on_release: dropdown.select(self.text)
+						height: action_button.height 
 				
 		BoxLayout:
 
