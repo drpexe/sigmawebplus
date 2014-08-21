@@ -1,7 +1,8 @@
 #:set VeryDarkGreen (10/5/255.0,45/5/255.0,35/5/255.0,1)
-#:set DarkGreen (10/255.0,45/255.0,35/255.0,1)
+#:set DarkGreen (13/255.0,59/255.0,46/255.0,1)
 #:set LightGreen (25/255.0,117/255.0,93/255.0,1)
 #:set DarkGray (0.18,0.18,0.18,1)
+#:set Gray (0.75,0.75,0.75,1)
 #:set LightGray (0.86,0.86,0.86,1)
 #:set White (1,1,1,1)
 #:set Black (0,0,0,1)
@@ -9,9 +10,11 @@
 ############## ACTIVITIES ###################
 <Activity_Main@BoxLayout>
 	#Properties
-	student_name: 'Fulano de Tal'
-	student_username: '123456789'
-	student_photo: 'res/android/ic_contact_picture.png'
+	student_name: 'Matheus Giaretta Cansian'
+	student_username: '210120810'
+	student_college: 'UDESC/CCT'
+	#student_photo: 'res/android/ic_contact_picture.png'
+	student_photo: 'res/android/Matheus.png'
 
 	#Hack: Dropdown weakref
 	#Mais info. na definicao do widget KivyDropDown
@@ -46,51 +49,295 @@
 						text: 'Desconectar'
 						on_release: dropdown.select(self.text)
 						height: action_button.height 
-				
-		BoxLayout:
-			orientation: 'vertical'
+		
+		ScrollView:
+			scroll_timeout: 75
+		
+			on_parent:
+				self.effect_cls.spring_constant = 5
 			
-			#Header com a foto e o nome do aluno
-			BoxLayout:
-				padding: (20,10)
-				size_hint: (1, 0.25)
-				
-				Image:
-					size_hint: (None, 1)
-					width: self.height
-					allow_stretch: True
-					source: root.student_photo
-				
-				BoxLayout:
-					padding: (10, 0)
-					orientation: 'vertical'
-					
-					Label:
-						size_hint: (1, 0.6)
-						color: DarkGray
-						markup: True
-						halign: 'center'
-						valign: 'middle'
-						text: '[b]' + root.student_name + '[/b]'
-						font_size: self.height / 3
-						text_size: self.size
-						
-					
-					Label:
-						size_hint: (1, 0.4)
-						color: DarkGray
-						markup: True
-						halign: 'center'
-						valign: 'middle'
-						text: root.student_username
-						font_size: self.height / 2
-						text_size: self.size
-			
-			BoxLayout:
-				
+			Fragment_Main:
+				student_name: root.student_name
+				student_username: root.student_username
+				student_college: root.student_college
+				student_photo: root.student_photo
+				base_height: action_button.height
 
 
 ############## DEFINITIONS ###################
+
+<Fragment_Main@BoxLayout>
+	#Properties
+	student_name: ''
+	student_username: ''
+	student_college: ''
+	student_photo: ''
+	base_height: 0
+
+	orientation: 'vertical'
+
+	size_hint: (1, None)
+	spacing: 3
+	orientation: 'vertical'
+	padding: (10, 10)
+	
+	#Function
+	
+	#Hack: Calcular o tamanho do BoxLayout
+	#Utilizo essa variavel para o widget calcular o tamanho que deve ter
+	#Isso deve ser realizado para o ScrollView funcionar corretamente
+	should_calculate: '1'
+	on_size: if self.should_calculate == '1': self.should_calculate = '0' 		
+	on_should_calculate: for w in self.children: self.height += w.height
+
+	
+	#Header com a foto e o nome do aluno
+	BoxLayout:
+		padding: (20,10)
+		size_hint: (1, None)
+		height: root.base_height * 2
+		
+		Image:
+			size_hint: (None, 1)
+			width: self.height
+			allow_stretch: True
+			source: root.student_photo
+		
+		BoxLayout:
+			padding: (10, 0)
+			orientation: 'vertical'
+			
+			Label:
+				size_hint: (1, 0.6)
+				color: DarkGray
+				markup: True
+				halign: 'left'
+				valign: 'middle'
+				text: '[b]' + root.student_name + '[/b]'
+				font_size: self.parent.height * 0.6 / 2 * 0.7
+				text_size: self.size
+				
+			Label:
+				size_hint: (1, 0.2)
+				color: DarkGray
+				markup: True
+				halign: 'left'
+				valign: 'middle'
+				text: root.student_username
+				font_size: self.parent.height * 0.3 / 2
+				text_size: self.size
+			
+			Label:
+				size_hint: (1, 0.2)
+				color: DarkGray
+				markup: True
+				halign: 'left'
+				valign: 'bottom'
+				text: root.student_college
+				font_size: self.parent.height * 0.3 / 2
+				text_size: self.size
+	
+	HeaderCourse:
+		height: root.base_height * 0.5
+	
+	ButtonCourse:
+		height: root.base_height
+		course_name: 'CDI2001'
+		course_grade: '8.0'
+		course_highlight: '1'
+	ButtonCourse:
+		height: root.base_height
+		course_name: 'FGE3001'
+		course_grade: '3.7'
+	ButtonCourse:
+		height: root.base_height
+		course_name: 'MAP1001'
+		course_grade: 'N.Pub'
+	ButtonCourse:
+		height: root.base_height
+		course_name: 'EMA2001'
+		course_grade: '0.9'
+	ButtonCourse:
+		height: root.base_height
+		course_name: 'EMA2001'
+		course_grade: '0.9'
+	ButtonCourse:
+		height: root.base_height
+		course_name: 'EMA2001'
+		course_grade: '0.9'
+	ButtonCourse:
+		height: root.base_height
+		course_name: 'EMA2001'
+		course_grade: '0.9'
+	ButtonCourse:
+		height: root.base_height
+		course_name: 'EMA2001'
+		course_grade: '0.9'
+	ButtonCourse:
+		height: root.base_height
+		course_name: 'EMA2001'
+		course_grade: '0.9'
+	ButtonCourse:
+		height: root.base_height
+		course_name: 'EMA2001'
+		course_grade: '0.9'
+	ButtonCourse:
+		height: root.base_height
+		course_name: 'EMA2001'
+		course_grade: '0.9'
+	ButtonCourse:
+		height: root.base_height
+		course_name: 'EMA2001'
+		course_grade: '0.9'
+	ButtonCourse:
+		height: root.base_height
+		course_name: 'EMA2001'
+		course_grade: '0.9'
+	ButtonCourse:
+		height: root.base_height
+		course_name: 'EMA2001'
+		course_grade: '0.9'
+	ButtonCourse:
+		height: root.base_height
+		course_name: 'EMA2001'
+		course_grade: '0.9'
+	ButtonCourse:
+		height: root.base_height
+		course_name: 'EMA2001'
+		course_grade: '0.9'
+	ButtonCourse:
+		height: root.base_height
+		course_name: 'EMA2001'
+		course_grade: '0.9'
+	ButtonCourse:
+		height: root.base_height
+		course_name: 'EMA2001'
+		course_grade: '0.9'
+	ButtonCourse:
+		height: root.base_height
+		course_name: 'EMA2001'
+		course_grade: '0.9'
+	ButtonCourse:
+		height: root.base_height
+		course_name: 'EMA2001'
+		course_grade: '0.9'
+	ButtonCourse:
+		height: root.base_height
+		course_name: 'EMA2001'
+		course_grade: '0.9'
+	ButtonCourse:
+		height: root.base_height
+		course_name: 'EMasdsadasA2001'
+		course_grade: '0.9'
+		
+	#Spacer
+	Label:
+
+<HeaderCourse@BoxLayout>
+	size_hint: (1, None)
+
+	canvas.before:
+		Color:
+			rgb: LightGray
+		Rectangle:
+			pos: self.pos
+			size: self.size
+	
+	AnchorLayout:
+		anchor_x: 'left'
+		size_hint: (0.6, 1)	
+		
+		Label:
+			padding: (10,0)
+			markup: True
+			size_hint: (1, 1)
+			text: '[b] Materia[/b]'
+			font_size: self.parent.parent.height / 2
+			halign: 'right'
+			color: DarkGray
+	
+	AnchorLayout:
+		anchor_x: 'right'
+		
+		BoxLayout:
+			#Spacer
+			Label:
+			
+			Label:
+				markup: True
+				size_hint: (1, 1)
+				text: '[b] Result. parciais[/b]'
+				font_size: self.parent.parent.height / 2
+				halign: 'right'
+				color: DarkGray
+			
+			#Spacer
+			Label:
+				size_hint: (0.1, 1)
+
+<ButtonCourse@ButtonBoxLayout>
+	#Properties
+	course_name: ''
+	course_grade: ''
+	course_highlight: '0'
+
+	#Style
+	size_hint: (1, None)
+	
+	#Function
+	overlay: 0
+
+	
+	on_press:
+		self.overlay = 0.6
+	
+	on_release: 
+		self.overlay = 0
+		self.course_highlight = '0'
+	
+	canvas.before:
+		Color:
+			rgba: 0.85,0.85,0.85,self.overlay
+		Rectangle:
+			pos: self.pos
+			size: self.size
+	
+	canvas.after:
+		Color:
+			rgb: LightGray
+		Line:
+			points: (self.parent.padding[0], self.center_y-self.height/2, self.width,self.center_y-self.height/2)
+	
+	AnchorLayout:
+		anchor_x: 'left'
+		size_hint: (0.6, 1)	
+			
+		Label:
+			padding: (10,0)
+			markup: True
+			text: root.course_name if root.course_highlight == '0' else '[b]'+ root.course_name + '[/b]' 
+			font_size: root.height / 2 * 0.7
+			halign: 'right'
+			color: DarkGray
+	
+	AnchorLayout:
+		anchor_x: 'right'
+		
+		BoxLayout:
+			#Spacer
+			Label:
+			
+			Label:
+				padding: (10,0)
+				markup: True
+				text: root.course_grade if root.course_highlight == '0' else '[b]'+ root.course_grade + '[/b]'
+				font_size: root.height / 2 * 0.7
+				halign: 'right'
+				color: DarkGray
+				
+			#Spacer
+			Label:
+				size_hint: (0.1, 1)
 
 <KivyDropDown@DropDown>
 	#Hack: Dropdown weakref
@@ -106,7 +353,7 @@
 <KivyActivity@BoxLayout>
 	canvas.before:
 		Color:
-			rgb: LightGray
+			rgb: White
 		Rectangle:
 			pos: self.pos
 			size: self.size
